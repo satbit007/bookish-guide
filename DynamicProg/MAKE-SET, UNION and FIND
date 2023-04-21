@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Set {
+    int parent;
+    int rank;
+};
+
+struct Set* makeSet(int x, struct Set* sets) {
+    sets[x].parent = x;
+    sets[x].rank = 0;
+    return sets;
+}
+
+int find(int x, struct Set* sets) {
+    if (sets[x].parent != x) {
+        sets[x].parent = find(sets[x].parent, sets);
+    }
+    return sets[x].parent;
+}
+
+struct Set* unionSets(int x, int y, struct Set* sets) {
+    int xRoot = find(x, sets);
+    int yRoot = find(y, sets);
+    if (xRoot == yRoot) {
+        return sets;
+    }
+    if (sets[xRoot].rank < sets[yRoot].rank) {
+        sets[xRoot].parent = yRoot;
+    } else if (sets[xRoot].rank > sets[yRoot].rank) {
+        sets[yRoot].parent = xRoot;
+    } else {
+        sets[yRoot].parent = xRoot;
+        sets[xRoot].rank++;
+    }
+    return sets;
+}
+
+void printSets(int n, struct Set* sets) {
+    printf("Sets: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", sets[i].parent);
+    }
+    printf("\n");
+}
+
+int main() {
+    int n = 10;
+    struct Set* sets = (struct Set*)malloc(n * sizeof(struct Set));
+
+    // Make-Set operations
+    for (int i = 0; i < n; i++) {
+        sets = makeSet(i, sets);
+    }
+    printf("After Make-Set Operations:\n");
+    printSets(n, sets);
+
+    // Union operations
+    sets = unionSets(0, 1, sets);
+    sets = unionSets(2, 3, sets);
+    sets = unionSets(4, 5, sets);
+    sets = unionSets(6, 7, sets);
+    printf("After Union Operations:\n");
+    printSets(n, sets);
+
+    // Find operations
+    int root0 = find(0, sets);
+    int root1 = find(1, sets);
+    int root6 = find(6, sets);
+    printf("After Find Operations:\n");
+    printf("Root of 0: %d\n", root0);
+    printf("Root of 1: %d\n", root1);
+    printf("Root of 6: %d\n", root6);
+
+    free(sets);
+    return 0;
+}
