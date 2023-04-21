@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+#define N 5
+
+void mat_Order(int p[], int n, int m[][N], int s[][N]) {
+    int i, j, k, L, q;
+    
+    for (i = 1; i <= n; i++)
+        m[i][i] = 0;
+
+    L = 2;
+while (L <= n) {
+    i = 1;
+    while (i <= n - L + 1) {
+        j = i + L - 1;
+        m[i][j] = INT_MAX;
+        k = i;
+        while (k <= j - 1) {
+            q = m[i][k] + m[k + 1][j] + p[i - 1] * p[k] * p[j];
+            if (q < m[i][j]) {
+                m[i][j] = q;
+                s[i][j] = k;
+            }
+            k++;
+        }
+        i++;
+    }
+    L++;
+}
+
+}
+
+void mult_Parenthesis(int s[][N], int i, int j) {
+    if (i == j) {
+        printf("A%d", i);
+    } else {
+        printf("(");
+        mult_Parenthesis(s, i, s[i][j]);
+        mult_Parenthesis(s, s[i][j] + 1, j);
+        printf(")");
+    }
+}
+
+int count_Mult(int s[N][N], int i, int j, int p[]) {
+    if (i == j) return 0;
+
+    int k;
+    int min_Mult = INT_MAX;
+    for (k = i; k < j; k++) {
+        int left_Mult = count_Mult(s, i, k, p);
+        int right_Mult = count_Mult(s, k+1, j, p);
+        int curr_Mult = p[i-1] * p[k] * p[j];
+        int total_Mult = left_Mult + right_Mult + curr_Mult;
+        if (total_Mult < min_Mult) {
+            min_Mult = total_Mult;
+        }
+    }
+    return min_Mult;
+}
+
+
+int main() {
+    int p[] = {10, 8, 5, 15, 20, 12};
+    int n = sizeof(p) / sizeof(p[0]);
+
+    int m[N][N], s[N][N];
+    mat_Order(p, n - 1, m, s);
+
+    printf("The sequence of multiplications using parenthesis: ");
+    mult_Parenthesis(s, 1, n - 1);
+    printf("\n");
+
+    //printf("Minimum number of scalar multiplications: %d\n", m[1][n - 1]);
+    int total_Mult = count_Mult(s, 1, 5, p);
+    printf("The total number of scalar multiplications is %d\n",total_Mult);
+
+
+    return 0;
+}
