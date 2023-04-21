@@ -33,14 +33,14 @@ int lcs_length(char *A, char *B, int m, int n, int L[][M_LENGTH]) {
 
 void print_lcs(char *A, char *B, int m, int n, int L[][M_LENGTH]) {
     char lcs[M_LENGTH];
-    int len = 0;
+    int l = 0;
     int i = m;
     int j = n;
 
     while (i > 0 && j > 0) {
         if (A[i-1] == B[j-1]) {
-            lcs[len] = A[i-1];
-            len++;
+            lcs[l] = A[i-1];
+            l++;
             i--;
             j--;
         } else if (L[i][j-1] > L[i-1][j]) {
@@ -52,52 +52,52 @@ void print_lcs(char *A, char *B, int m, int n, int L[][M_LENGTH]) {
 
     // Print the LCS in reverse order
     printf("LCS: ");
-    for (int k = len-1; k >= 0; k--) {
+    for (int k = l-1; k >= 0; k--) {
         printf("%c", lcs[k]);
     }
     printf("\n");
 }
 
 int main() {
-    // Example 1
+    // Input String 1
     char A3[] = "ABCD";
     char B3[] = "EFGH";
     int m3 = strlen(A3);
     int n3 = strlen(B3);
     int L3[M_LENGTH][M_LENGTH];
-    int len3 = lcs_length(A3, B3, m3, n3, L3);
+    int l3 = lcs_length(A3, B3, m3, n3, L3);
     printf("Input String 1:\n");
     printf("X: %s\n", A3);
     printf("Y: %s\n", B3);
-    printf("Length of Longest Common Subsequence: %d\n", len3);
+    printf("Length of Longest Common Subsequence: %d\n", l3);
     print_lcs(A3, B3, m3, n3, L3);
     printf("\n");
     
-    // Example 2
+    // Input String 2
     char A2[] = "ABCDGH";
     char B2[] = "AEDFHR";
     int m2 = strlen(A2);
     int n2 = strlen(B2);
     int L2[M_LENGTH][M_LENGTH];
-    int len2 = lcs_length(A2, B2, m2, n2, L2);
+    int l2 = lcs_length(A2, B2, m2, n2, L2);
     printf("Input String 2:\n");
     printf("X: %s\n", A2);
     printf("Y: %s\n", B2);
-    printf("Length of Longest Common Subsequence: %d\n", len2);
+    printf("Length of Longest Common Subsequence: %d\n", l2);
     print_lcs(A2, B2, m2, n2, L2);
     printf("\n");
 
-    // Example 3
+    // Input String 3
     char A1[] = "AGGTAB";
     char B1[] = "GXTXAYB";
     int m1 = strlen(A1);
     int n1 = strlen(B1);
     int L1[M_LENGTH][M_LENGTH];
-    int len1 = lcs_length(A1, B1, m1, n1, L1);
+    int l1 = lcs_length(A1, B1, m1, n1, L1);
     printf("Input String 3:\n");
     printf("X: %s\n", A1);
     printf("Y: %s\n", B1);
-    printf("Length of Longest Common Subsequence: %d\n", len1);
+    printf("Length of Longest Common Subsequence: %d\n", l1);
     print_lcs(A1, B1, m1, n1, L1);
     printf("\n");
 
