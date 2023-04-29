@@ -2,47 +2,46 @@
 #include <stdlib.h>
 #include <limits.h>
 
-// Function to sort items in decreasing order of size
+// Sorting the elements in decreasing order of weights
 void sort(int arr[], int n)
 {
-    int i, j, temp;
-    for (i = 0; i < n - 1; i++) {
-        for (j = i + 1; j < n; j++) {
+    int i = 0, j, temp;
+    while (i < n - 1) {
+        j = i + 1;
+        while (j < n) {
             if (arr[j] > arr[i]) {
                 temp = arr[i];
                 arr[i] = arr[j];
                 arr[j] = temp;
             }
+            j++;
         }
+        i++;
     }
 }
 
-// Function to find the minimum number of bins needed
-int firstFitDecreasing(int weight[], int n, int c)
+// Finding the minimum required number of bins
+int BinPackingProblem(int weight[], int n, int c)
 {
-    // Sort the items in decreasing order of size
     sort(weight, n);
-
-    // Initialize the number of bins needed and remaining space in each bin
     int bin_count = 0;
-    int bin_rem[n];
+    int bin_capacityleft[n];
     int i, j;
 
-    // Place each item in the first bin that has enough remaining space
+    // Element is stored in the first bin if it has enough space
     for (i = 0; i < n; i++) {
-        // Find the first bin that can accommodate weight[i]
+        // Finding the first bin that can take the next element
         j = 0;
-        while (j < bin_count) {
-            if (bin_rem[j] >= weight[i]) {
-                bin_rem[j] -= weight[i];
-                break;
+        for (j = 0; j < bin_count; j++) {
+             if (bin_capacityleft[j] >= weight[i]) {
+                 bin_capacityleft[j] -= weight[i];
+                 break;
             }
-            j++;
         }
 
-        // If no bin could accommodate weight[i], create a new bin
+        // New bin is created if no other bin can fit the element
         if (j == bin_count) {
-            bin_rem[bin_count] = c - weight[i];
+            bin_capacityleft[bin_count] = c - weight[i];
             bin_count++;
         }
     }
@@ -50,15 +49,14 @@ int firstFitDecreasing(int weight[], int n, int c)
     return bin_count;
 }
 
-// Driver code
 int main()
 {
     int weight[] = {5, 7, 5, 2, 4, 2, 5, 1, 6};
     int n = sizeof(weight) / sizeof(weight[0]);
     int c = 10;
 
-    printf("Minimum number of bins needed using First Fit Decreasing: %d\n",
-           firstFitDecreasing(weight, n, c));
+    printf("Minimum number of bins required: %d\n",
+           BinPackingProblem(weight, n, c));
 
     return 0;
 }
